@@ -10,7 +10,7 @@ from [Portfolio Project]..[covid-deaths]
 where location like '%geria'
 order by 1,2
 	
---- TOTTAL CASES VS POPULATION - INFECTION RATE
+--- TOTAL CASES VS POPULATION - INFECTION RATE
 select Location, date,total_cases,population,(total_cases/population)*100 InfectionRate
 from [Portfolio Project]..[covid-deaths]
 --where location like '%geria'
