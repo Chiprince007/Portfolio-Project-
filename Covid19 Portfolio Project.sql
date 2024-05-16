@@ -9,22 +9,23 @@ select Location, date,total_cases,total_deaths,(cast(total_deaths as float)/cast
 from [Portfolio Project]..[covid-deaths]
 where location like '%geria'
 order by 1,2
-
+	
+--- TOTTAL CASES VS POPULATION - INFECTION RATE
 select Location, date,total_cases,population,(total_cases/population)*100 InfectionRate
 from [Portfolio Project]..[covid-deaths]
 --where location like '%geria'
 order by 1,2
 
 
---countries with higjhest infection rate
+--COUNTRIES WITH THE HIGHEST INFECTION RATE
 select Location,population,max(total_cases)HighestInfectionCount,Max((total_cases/population))*100 InfectionRate
 from [Portfolio Project]..[covid-deaths]
 --where location like '%geria'
-group by location,population
+group by location, population
 order by InfectionRate desc
 
 
---- Highest Death count per population
+--- HIGHEST DEATH COUNT PER POPULATION
 select location,max(cast(total_deaths as int)) TotalDeathCount
 from [Portfolio Project]..[covid-deaths]
 where continent is not null
@@ -45,7 +46,7 @@ where continent is not null
 --group by date
 order by 1,2
 
-
+--- USING JOINS
 select cvd.continent,cvd.location,cvd.date,cvd.population,cvv.new_vaccinations
 ,sum(cast (cvv.new_vaccinations as float)) over (partition by cvd.location order by cvd.location,cvd.date) RollingVaccination
 from [Portfolio Project]..[covid-deaths] cvd
@@ -55,8 +56,7 @@ join [Portfolio Project]..[covid vaccination] cvv
 where cvd.continent is not null
 order by 2,3
 
-
-
+--- USING CTEs
 WITH POPVAC (continent,location,date,population,new_vaccinations,RollingVaccination)
 as
 (
@@ -98,7 +98,7 @@ select *, (RollingVaccination/population)*100 PercentPopulationVaccinated
 from #percentpopulationvaccinated
 
 
---- creating view
+--- CREATING VIEW FOR VISUALIZATION
 
 create view populationvaccinated as
 select cvd.continent,cvd.location,cvd.date,cvd.population,cvv.new_vaccinations
